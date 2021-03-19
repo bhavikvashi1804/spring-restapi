@@ -83,6 +83,16 @@ public class PersonController {
 		} else {
 			return new ResponseEntity(null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
+		
+		/* URL: http://localhost:8080/jtPutPerson/101
+		 * Better comment
+			{
+			    "name":"Bhavik1",
+			    "age":55,
+			    "salary": 2000
+			}
+		 * 
+		 */
 	}
 
 	@DeleteMapping("/jtDeletePerson/{id}")
