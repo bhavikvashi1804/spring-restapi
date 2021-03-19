@@ -2,6 +2,7 @@ package com.bhavik.restapi.controller;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,8 +29,8 @@ public class PersonController {
 
 	@GetMapping("/jtPersonApi")
 	public List<Person> getAllPerson() {
-
-		return null;
+		List<Person> allPerson = jdbcTemplate.query("select * from person1", new PersonExtract1());
+		return allPerson;
 	}
 
 	@GetMapping("/jtPersonApi/{id}")
@@ -83,14 +84,10 @@ public class PersonController {
 		} else {
 			return new ResponseEntity(null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-		
-		/* URL: http://localhost:8080/jtPutPerson/101
-		 * Better comment
-			{
-			    "name":"Bhavik1",
-			    "age":55,
-			    "salary": 2000
-			}
+
+		/*
+		 * URL: http://localhost:8080/jtPutPerson/101 Better comment { "name":"Bhavik1",
+		 * "age":55, "salary": 2000 }
 		 * 
 		 */
 	}
@@ -132,4 +129,18 @@ class PersonExtract implements ResultSetExtractor<Person> {
 		return person1;
 	}
 
+}
+
+class PersonExtract1 implements ResultSetExtractor<List<Person>> {
+
+	@Override
+	public List<Person> extractData(ResultSet rs) throws SQLException, DataAccessException {
+		List<Person> list = new ArrayList<Person>();
+
+		while (rs.next()) {
+			Person p = new Person(rs.getInt("id"), rs.getString("name"), rs.getInt("age"), rs.getInt("salary"));
+			list.add(p);
+		}
+		return list;
+	}
 }
