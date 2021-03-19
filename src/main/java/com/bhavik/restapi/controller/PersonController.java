@@ -26,20 +26,20 @@ public class PersonController {
 	@Autowired
 	JdbcTemplate jdbcTemplate;
 
-	@GetMapping("/jtGetAllPerson")
+	@GetMapping("/jtPersonApi")
 	public List<Person> getAllPerson() {
 
 		return null;
 	}
 
-	@GetMapping("/jtGetOnePerson/{id}")
+	@GetMapping("/jtPersonApi/{id}")
 	public Person getOnePerson(@PathVariable int id) {
 
 		Person p = jdbcTemplate.query("select * from person1 where id = ?", new PersonExtract(), id);
 		return p;
 	}
 
-	@PostMapping("/jtAddPerson")
+	@PostMapping("/jtPersonApi")
 	public ResponseEntity<Object> registerPerson(@RequestBody Person p) {
 
 		int noOfRowsUpdated = 0;
@@ -53,7 +53,7 @@ public class PersonController {
 		}
 
 		if (noOfRowsUpdated > 0) {
-			return new ResponseEntity(p, HttpStatus.OK);
+			return new ResponseEntity("Insert Done", HttpStatus.OK);
 		} else {
 			return new ResponseEntity(null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
@@ -65,7 +65,7 @@ public class PersonController {
 		 */
 	}
 
-	@PutMapping("/jtPutPerson/{id}")
+	@PutMapping("/jtPersonApi/{id}")
 	public ResponseEntity<Object> updateOnePerson(@RequestBody Person p, @PathVariable int id) {
 
 		int noOfRowsUpdated = 0;
@@ -95,7 +95,7 @@ public class PersonController {
 		 */
 	}
 
-	@DeleteMapping("/jtDeletePerson/{id}")
+	@DeleteMapping("/jtPersonApi/{id}")
 	public ResponseEntity<Object> deleteOnePerson(@PathVariable int id) {
 		int noOfRowsUpdated = 0;
 
