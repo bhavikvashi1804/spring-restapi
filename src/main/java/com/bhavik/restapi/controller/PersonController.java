@@ -66,31 +66,32 @@ public class PersonController {
 	}
 
 	@PutMapping("/jtPutPerson")
-	public ResponseEntity<Object> updateOnePerson(Person p) {
+	public ResponseEntity<Object> updateOnePerson(@RequestBody Person p) {
 
 		int noOfRowsUpdated = 0;
 
 		try {
 
-			noOfRowsUpdated = jdbcTemplate.update("update person ", p.getId(), p.getName(), p.getAge(), p.getSalary());
+			noOfRowsUpdated = jdbcTemplate.update("update person1 set name=?, age=?, salary=? where id=? ", p.getName(),
+					p.getAge(), p.getSalary(), p.getId());
 		} catch (Exception e) {
 			return new ResponseEntity(null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 
 		if (noOfRowsUpdated > 0) {
-			return new ResponseEntity(p, HttpStatus.OK);
+			return new ResponseEntity("Update Done", HttpStatus.OK);
 		} else {
 			return new ResponseEntity(null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
-	
+
 	@DeleteMapping("/jtDeletePerson/{id}")
-	public ResponseEntity<Object> deleteOnePerson(@PathVariable int id){
+	public ResponseEntity<Object> deleteOnePerson(@PathVariable int id) {
 		int noOfRowsUpdated = 0;
 
 		try {
 
-			noOfRowsUpdated = jdbcTemplate.update("delete from person1 where id = ? ",id);
+			noOfRowsUpdated = jdbcTemplate.update("delete from person1 where id = ? ", id);
 		} catch (Exception e) {
 			return new ResponseEntity(null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
@@ -100,10 +101,9 @@ public class PersonController {
 		} else {
 			return new ResponseEntity(null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-		
+
 		// url: http://localhost:8080/jtDeletePerson/107
 	}
-	
 
 }
 
