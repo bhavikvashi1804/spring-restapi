@@ -29,24 +29,25 @@ public class PersonController {
 	@GetMapping("/jtGetOnePerson/{id}")
 	public Person getOnePerson(@PathVariable int id) {
 
-		Person p = jdbcTemplate.query("select * from person1 where id = ?", new ResultSetExtractor<Person>() {
-
-			@Override
-			public Person extractData(ResultSet rs) throws SQLException, DataAccessException {
-
-				Person person1 = new Person();
-				rs.next();
-
-				person1.setId(rs.getInt("id"));
-				person1.setName(rs.getString("name"));
-				person1.setAge(rs.getInt("age"));
-				person1.setSalary(rs.getInt("salary"));
-
-				return person1;
-			}
-
-		}, id);
+		Person p = jdbcTemplate.query("select * from person1 where id = ?",new  PersonExtract(), id);
 		return p;
+	}
+
+}
+
+class PersonExtract implements ResultSetExtractor<Person> {
+
+	@Override
+	public Person extractData(ResultSet rs) throws SQLException, DataAccessException {
+		Person person1 = new Person();
+		rs.next();
+
+		person1.setId(rs.getInt("id"));
+		person1.setName(rs.getString("name"));
+		person1.setAge(rs.getInt("age"));
+		person1.setSalary(rs.getInt("salary"));
+
+		return person1;
 	}
 
 }
