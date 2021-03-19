@@ -65,15 +65,15 @@ public class PersonController {
 		 */
 	}
 
-	@PutMapping("/jtPutPerson")
-	public ResponseEntity<Object> updateOnePerson(@RequestBody Person p) {
+	@PutMapping("/jtPutPerson/{id}")
+	public ResponseEntity<Object> updateOnePerson(@RequestBody Person p, @PathVariable int id) {
 
 		int noOfRowsUpdated = 0;
 
 		try {
 
 			noOfRowsUpdated = jdbcTemplate.update("update person1 set name=?, age=?, salary=? where id=? ", p.getName(),
-					p.getAge(), p.getSalary(), p.getId());
+					p.getAge(), p.getSalary(), id);
 		} catch (Exception e) {
 			return new ResponseEntity(null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
