@@ -6,10 +6,14 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bhavik.restapi.model.Person;
@@ -29,8 +33,40 @@ public class PersonController {
 	@GetMapping("/jtGetOnePerson/{id}")
 	public Person getOnePerson(@PathVariable int id) {
 
-		Person p = jdbcTemplate.query("select * from person1 where id = ?",new  PersonExtract(), id);
+		Person p = jdbcTemplate.query("select * from person1 where id = ?", new PersonExtract(), id);
 		return p;
+	}
+
+	@PostMapping("/jtAddPerson")
+	public ResponseEntity<Object> registerPerson(@RequestBody Person p) {
+
+		int noOfRowsUpdated = 0;
+
+		try {
+
+			noOfRowsUpdated = jdbcTemplate.update("insert into person1 values (?,?,?,?)", p.getId(), p.getName(),
+					p.getAge(), p.getSalary());
+		} catch (Exception e) {
+			return new ResponseEntity(null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+
+		if (noOfRowsUpdated > 0) {
+			return new ResponseEntity(p, HttpStatus.OK);
+		} else {
+			return new ResponseEntity(null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		
+		/*
+		 * Method Get -> Post
+		 * Body > Raw > JSON Select 
+		 * {
+			    "id":107,
+			    "name":"Atul",
+			    "age":54,
+			    "salary":35000
+			}
+		 * 
+		 */
 	}
 
 }
